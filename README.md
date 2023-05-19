@@ -32,22 +32,28 @@ devtools::install_github("kylebutts/rademacher")
 
 ``` r
 library(rademacher)
+library(dqrng)
 library(bench)
+#> Warning: package 'bench' was built under R version 4.2.2
 
-# 1,000,000 draws is ~ 13x as fast
+# 1,000,000 draws is ~ 13x as fast as stats::runif, 25x as fast as stats::sample, 3x as fast as dqrng::dqsample
 n = 1e7
 bench::mark(
   runif_rademacher  = (runif(n) > 0.5) * 2 - 1,
   sample_rademacher = sample_rademacher(n),
-  check = FALSE
+  samp = sample(x = c(1, -1), size = n, replace = TRUE),
+  dqsamp = dqsample(x = c(1,-1), size = n, replace = TRUE),
+  check = FALSE, 
+  iterations = 3
 )
-#> Warning: Some expressions had a GC in every iteration; so filtering is
-#> disabled.
-#> # A tibble: 2 × 6
+#> Warning: Some expressions had a GC in every iteration; so filtering is disabled.
+#> # A tibble: 4 × 6
 #>   expression             min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>        <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 runif_rademacher   93.62ms 103.57ms      9.46   190.7MB     18.9
-#> 2 sample_rademacher   6.47ms   7.41ms    117.      39.4MB     35.6
+#> 1 runif_rademacher     600ms 664.69ms     1.49    190.7MB    2.48 
+#> 2 sample_rademacher   39.9ms  45.66ms    22.6      39.4MB    0    
+#> 3 samp               842.6ms    1.08s     0.921   114.5MB    0.921
+#> 4 dqsamp              97.1ms 127.45ms     7.65    114.5MB    2.55
 
 # 1000 draws is ~ 4.5x as fast
 n = 1000
@@ -59,8 +65,8 @@ bench::mark(
 #> # A tibble: 2 × 6
 #>   expression             min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>        <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 runif_rademacher    8.16µs  10.33µs    92669.   22.16KB     18.5
-#> 2 sample_rademacher   1.15µs   1.56µs   525800.    6.62KB      0
+#> 1 runif_rademacher    52.4µs   87.5µs     7601.   22.16KB     0   
+#> 2 sample_rademacher    5.1µs      9µs    51497.    6.62KB     5.15
 ```
 
 This is totally open source. You can copy and past to your package
