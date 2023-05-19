@@ -40,14 +40,18 @@ devtools::install_github("kylebutts/rademacher")
 
 ```{r benchmark}
 library(rademacher)
+library(dqrng)
 library(bench)
 
-# 1,000,000 draws is ~ 13x as fast
+# 1,000,000 draws is ~ 13x as fast as stats::runif, 25x as fast as stats::sample, 3x as fast as dqrng::dqsample
 n = 1e7
 bench::mark(
   runif_rademacher  = (runif(n) > 0.5) * 2 - 1,
   sample_rademacher = sample_rademacher(n),
-  check = FALSE
+  samp = sample(x = c(1, -1), size = n, replace = TRUE),
+  dqsamp = dqsample(x = c(1,-1), size = n, replace = TRUE),
+  check = FALSE, 
+  iterations = 3
 )
 
 # 1000 draws is ~ 4.5x as fast
