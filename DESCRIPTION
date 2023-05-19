@@ -2,7 +2,8 @@ Package: rademacher
 Title: Very fast Random Sampling from the Rademacher Distribution
 Version: 0.1
 Authors@R: 
-    person("Kyle", "Butts")
+        person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Very fast draws from the rademacher distribution
 License: MIT + file LICENSE
 Encoding: UTF-8
