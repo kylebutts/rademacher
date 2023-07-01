@@ -43,17 +43,17 @@ bench::mark(
   samp = sample(x = c(1, -1), size = n, replace = TRUE),
   dqsamp = dqsample(x = c(1,-1), size = n, replace = TRUE),
   check = FALSE, 
-  iterations = 3
+  iterations = 1000
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
 #> # A tibble: 4 × 6
 #>   expression             min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>        <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 runif_rademacher    94.1ms   97.2ms      9.68   190.7MB    16.1 
-#> 2 sample_rademacher   47.8ms     48ms     20.5     39.4MB     6.82
-#> 3 samp               109.9ms    113ms      8.33   114.5MB     8.33
-#> 4 dqsamp              45.3ms     47ms     18.1    114.5MB     6.03
+#> 1 runif_rademacher   85.16ms  90.58ms     10.8    190.7MB    16.0 
+#> 2 sample_rademacher   6.04ms   6.79ms    132.      39.4MB    23.1 
+#> 3 samp               106.4ms 109.78ms      8.98   114.5MB     8.97
+#> 4 dqsamp              44.4ms  47.57ms     20.4    114.5MB    20.4
 
 # 1000 draws is ~ 4.5x as fast
 n = 1000
@@ -65,8 +65,8 @@ bench::mark(
 #> # A tibble: 2 × 6
 #>   expression             min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>        <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 runif_rademacher    8.08µs  10.09µs    95363.   22.16KB     9.54
-#> 2 sample_rademacher   5.33µs   5.78µs   159838.    6.62KB     0
+#> 1 runif_rademacher    8.16µs  10.17µs    92925.   22.16KB     9.29
+#> 2 sample_rademacher   1.15µs   1.56µs   540471.    6.62KB     0
 ```
 
 This is totally open source. You can copy and past to your package

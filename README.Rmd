@@ -51,7 +51,7 @@ bench::mark(
   samp = sample(x = c(1, -1), size = n, replace = TRUE),
   dqsamp = dqsample(x = c(1,-1), size = n, replace = TRUE),
   check = FALSE, 
-  iterations = 3
+  iterations = 1000
 )
 
 # 1000 draws is ~ 4.5x as fast
