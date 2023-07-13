@@ -16,6 +16,5 @@ integer vector of length n with values -1 or 1
 This uses a fancy trick to draw Bernoulli(0.5) r.v.s
 quickly. To do so, the function draws from 1:(2^31 - 1), and then
 uses each bit of the integer to determine 31 values of 0/1. This
-allows for 31 Rademacher random variables to be drawn per random draw.
-Taking those bits * 2 - 1 gives the Rademacher random variables.
+allows for 31 0/1 random variables to be drawn per random draw.
 }

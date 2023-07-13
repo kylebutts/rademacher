@@ -2,5 +2,4 @@
 
 export(sample_0_1)
 export(sample_rademacher)
-importFrom(Rcpp,sourceCpp)
 useDynLib(rademacher, .registration = TRUE)
