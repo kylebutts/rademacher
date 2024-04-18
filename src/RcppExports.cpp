@@ -10,8 +10,19 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// sample_random_bits
+Rcpp::IntegerVector sample_random_bits(int n);
+RcppExport SEXP _rademacher_sample_random_bits(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_random_bits(n));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sample_0_1
-IntegerVector sample_0_1(int n);
+Rcpp::IntegerVector sample_0_1(int n);
 RcppExport SEXP _rademacher_sample_0_1(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -21,8 +32,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sample_logical
+Rcpp::LogicalVector sample_logical(int n);
+RcppExport SEXP _rademacher_sample_logical(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_logical(n));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sample_rademacher
-IntegerVector sample_rademacher(int n);
+Rcpp::IntegerVector sample_rademacher(int n);
 RcppExport SEXP _rademacher_sample_rademacher(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -34,7 +56,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_rademacher_sample_random_bits", (DL_FUNC) &_rademacher_sample_random_bits, 1},
     {"_rademacher_sample_0_1", (DL_FUNC) &_rademacher_sample_0_1, 1},
+    {"_rademacher_sample_logical", (DL_FUNC) &_rademacher_sample_logical, 1},
     {"_rademacher_sample_rademacher", (DL_FUNC) &_rademacher_sample_rademacher, 1},
     {NULL, NULL, 0}
 };
