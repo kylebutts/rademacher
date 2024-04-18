@@ -23,6 +23,11 @@ The way I generate $N$ is (approximately) as follows:
 This is totally open source. You can copy and past to your package
 without any credit needed.
 
+There is a developmental 64-bit version, but I have not figured out a
+good way to handle seeds, yet (currently just requires a seed be given).
+It was primarily written for testing purposes, but if you want the 
+fastest version, use the package `dqrng`.
+
 ## Installation
 
 You can install the development version of rademacher like so:
@@ -35,16 +40,16 @@ devtools::install_github("kylebutts/rademacher")
 
 ``` r
 library(rademacher)
+#> Loading required package: Rcpp
 library(dqrng)
 library(bench)
 
-# 1,000,000 draws is ~ 13x as fast as stats::runif, 25x as fast as stats::sample, 3x as fast as dqrng::dqsample
+# 1,000,000 draws is ~ 15x as fast as stats::runif and 20x as fast as stats::sample
 n = 1e7
 bench::mark(
   sample_rademacher = rademacher::sample_rademacher(n),
   runif_rademacher  = (runif(n) > 0.5) * 2 - 1,
   samp = sample(x = c(1, -1), size = n, replace = TRUE),
-  dqsamp = dqrng::dqsample(x = c(1,-1), size = n, replace = TRUE),
   dqrrademacher = dqrng::dqrrademacher(n),
   check = FALSE, 
   iterations = 250
@@ -54,13 +59,13 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression             min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>        <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 sample_rademacher   4.51ms    5.3ms    162.      39.4MB    43.4 
-#> 2 runif_rademacher   87.92ms   90.9ms     10.8    190.7MB    12.9 
-#> 3 samp              106.05ms 110.15ms      9.13   114.5MB     4.71
-#> 4 dqsamp             44.54ms  47.35ms     20.5    114.5MB    20.2 
-#> 5 dqrrademacher       1.33ms   2.31ms    362.      38.1MB    91.3
+#> 1 sample_rademacher  39.08ms   40.5ms     24.1     38.2MB     7.53
+#> 2 runif_rademacher   88.17ms  92.96ms     10.6    190.7MB    13.6 
+#> 3 samp               106.6ms 111.96ms      8.89   114.5MB     4.91
+#> 4 dqsamp             44.48ms  48.94ms     19.8    114.5MB    17.9 
+#> 5 dqrrademacher       3.71ms   4.28ms    196.      38.1MB    50.8
 
-# 1000 draws is ~ 4.5x as fast
+# 1000 draws is ~ 10x as fast
 n = 1000
 bench::mark(
   runif_rademacher  = (runif(n) > 0.5) * 2 - 1,
@@ -71,69 +76,10 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression             min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>        <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 runif_rademacher    8.24µs  10.41µs    90629.   22.16KB     9.06
-#> 2 sample_rademacher   1.02µs   1.39µs   519037.    6.62KB     0   
-#> 3 dqrrademacher     410.01ns    656ns  1143065.    3.95KB   114.
+#> 1 runif_rademacher     8.4µs  10.25µs    94284.   22.16KB     9.43
+#> 2 sample_rademacher   4.51µs   4.88µs   189422.    6.45KB    18.9 
+#> 3 dqrrademacher     492.03ns 696.98ns  1194761.    3.95KB     0
 ```
 
-This is totally open source (CC0 license). You can copy and past to your
-package without any credit needed.
-
-``` cpp
-#include <Rcpp.h>
-using namespace Rcpp;
-
-//' Sample Rademacher distribution really fast
-//'
-//' @description This uses a fancy trick to draw Rademacher weights very
-//'   quickly. To do so, the function draws from 1:(2^31 - 1), and then
-//'   uses each bit of the integer to determine 31 values of 0/1. This
-//'   allows for 31 Rademacher random variables to be drawn per random draw.
-//'   Taking those bits * 2 - 1 gives the Rademacher random variables.
-//'
-//' @param n Integer, number of random variables to draw
-//'
-//' @return integer vector of length n with values -1 or 1
-//'
-//' @export
-// [[Rcpp::export]]
-IntegerVector sample_rademacher(int n)
-{
-  if (n < 0)
-  {
-    stop("n must be a positive integer");
-  }
-  if (n > 2147483647)
-  {
-    stop("n must be less than 2147483647");
-  }
-
-  // Calculate the number of integers needed based on N
-  int num_integers = ceil(n / 31.0);
-
-  // 2^31 - 1 = 2147483647
-  IntegerVector random_integer = sample(2147483647, num_integers, true);
-
-  IntegerVector res = no_init(n);
-  R_len_t k = 0;
-  int J = 30;
-  int bits;
-  for (R_len_t i = 0; i < num_integers - 1; i++)
-  {
-    bits = random_integer[i];
-
-    for (int j = 0; j <= J; ++j, ++k)
-    {
-      res[k] = ((bits >> j) & 1) * 2 - 1;
-    }
-  }
-
-  bits = random_integer[num_integers - 1];
-  for (int j = 0; k < n; ++j, ++k)
-  {
-    res[k] = ((bits >> j) & 1) * 2 - 1;
-  }
-
-  return res;
-}
-```
+This is totally open source (CC0 license). You can copy and paste to
+your package without any credit needed.
