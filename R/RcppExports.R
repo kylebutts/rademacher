@@ -61,3 +61,35 @@ sample_rademacher <- function(n) {
     .Call(`_rademacher_sample_rademacher`, n)
 }
 
+#' Sample Bernoulli(0.5) distribution really fast
+#'
+#' @description This uses a fancy trick to draw Bernoulli(0.5) r.v.s
+#'   quickly. To do so, the function draws from 1:(2^31 - 1), and then
+#'   uses each bit of the integer to determine 31 values of 0/1. This
+#'   allows for 31 0/1 random variables to be drawn per random draw.
+#'
+#' @param n Integer, number of random variables to draw
+#'
+#' @return integer vector of length n with values -1 or 1
+#' @export
+sample_0_1_64bit <- function(n, seed) {
+    .Call(`_rademacher_sample_0_1_64bit`, n, seed)
+}
+
+#' Sample Rademacher distribution really fast
+#'
+#' @description This uses a fancy trick to draw Rademacher weights very
+#'   quickly. To do so, the function draws from 1:(2^31 - 1), and then
+#'   uses each bit of the integer to determine 31 values of 0/1. This
+#'   allows for 31 Rademacher random variables to be drawn per random draw.
+#'   Taking those bits * 2 - 1 gives the Rademacher random variables.
+#'
+#' @param n Integer, number of random variables to draw
+#'
+#' @return integer vector of length n with values -1 or 1
+#'
+#' @export
+sample_rademacher_64bit <- function(n, seed) {
+    .Call(`_rademacher_sample_rademacher_64bit`, n, seed)
+}
+
