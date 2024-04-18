@@ -54,38 +54,12 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sample_0_1_64bit
-Rcpp::IntegerVector sample_0_1_64bit(int n, int seed);
-RcppExport SEXP _rademacher_sample_0_1_64bit(SEXP nSEXP, SEXP seedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_0_1_64bit(n, seed));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sample_rademacher_64bit
-Rcpp::IntegerVector sample_rademacher_64bit(int n, int seed);
-RcppExport SEXP _rademacher_sample_rademacher_64bit(SEXP nSEXP, SEXP seedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_rademacher_64bit(n, seed));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rademacher_sample_random_bits", (DL_FUNC) &_rademacher_sample_random_bits, 1},
     {"_rademacher_sample_0_1", (DL_FUNC) &_rademacher_sample_0_1, 1},
     {"_rademacher_sample_logical", (DL_FUNC) &_rademacher_sample_logical, 1},
     {"_rademacher_sample_rademacher", (DL_FUNC) &_rademacher_sample_rademacher, 1},
-    {"_rademacher_sample_0_1_64bit", (DL_FUNC) &_rademacher_sample_0_1_64bit, 2},
-    {"_rademacher_sample_rademacher_64bit", (DL_FUNC) &_rademacher_sample_rademacher_64bit, 2},
     {NULL, NULL, 0}
 };
 

@@ -27,7 +27,7 @@ The Rademacher distribution draws -1 and 1 with probability 0.5 each. The way I 
 
 This is totally open source. You can copy and past to your package without any credit needed. 
 
-There is a developmental 64-bit version, but I have not figured out a good way to handle seeds, yet (currently just requires a seed be given). It was primarily written for testing purposes, but if you want the fastest version, use the package `dqrng`.
+There is a faster version of this function in the `dqrng` pacakge now using a faster underlying RNG, so if you want the maximum performance, use that package.
 
 ## Installation
 
